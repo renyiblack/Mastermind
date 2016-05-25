@@ -7,7 +7,7 @@ using namespace std;
 void Menu(int,int,int);
 void Jogo();
 void Instrucoes();
-void Configuracoes(int,int,int);
+void Configuracoes(int&,int&,int&);
 void Identificacao();
 
 int main()
@@ -15,9 +15,9 @@ int main()
     int jogadores=1,dificuldade=1,repeticao=2;
     Menu(jogadores,dificuldade,repeticao);
 }
-void Menu(int jogadores=1, int dificuldade=1, int repeticao=2)
+void Menu(int jogadores, int dificuldade, int repeticao)
 {
-    system("cls");//para n„o colocar um system cls em cada funÁ„o achei melhor deixar 2 no menu
+    system("cls");//para n√£o colocar um system cls em cada fun√ß√£o achei melhor deixar 2 no menu
     int escolha;
     cout<<"\n                     ___  ___             _                           _             _ \n";
     cout<<"                     |  \\/  |            | |                         (_)           | |\n";
@@ -53,11 +53,12 @@ void Menu(int jogadores=1, int dificuldade=1, int repeticao=2)
 }
 void Jogo()
 {
-    cout<<"Ainda n esta pronto";
+    cout<<"Ainda n esta pronto\n";
+    system("pause");
 }
 void Instrucoes()
 {
-    ifstream instrucao("instruÁ„o.txt");
+    ifstream instrucao("instru√ß√£o.txt");
     char ch;
     while(instrucao.get(ch))
         cout.put(ch);
