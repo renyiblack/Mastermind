@@ -1,4 +1,3 @@
-# Mastermind
 Para fazer o comando de instruções funcionar vcs tem que ir no local onde salvaram o arquivo mastermind.cpp e criarem um arquivo de texto(txt) nesse mesmo local com o nome "instrução" e copiar isso dentro do arquivo;
 "Antes de jogar, os jogadores decidem o numero de partidas que vao jogar, considerando que eh preciso jogar um numero par de partidas para que os dois jogadores tenham o mesmo numero de oportunidade como desafiante e desafiado.
 O primeiro a jogar como desafiante seleciona quatro pinos coloridos, coloca-os no tabuleiro e os esconde com a trave, formando assim, uma senha. A senha pode ser formada por qualquer combinacao de pinos coloridos. Os jogadores decidem, com antecedencia, se eh permitido repetir cores na senha. Note que isso aumenta a dificuldade do jogo.
