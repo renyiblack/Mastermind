@@ -4,20 +4,21 @@
 
 using namespace std;
 
-void Menu(int,int,int);
+void Menu(int,char[],char[],int,int);
 void Jogo();
 void Instrucoes();
 void Configuracoes(int&,int&,int&);
-void Identificacao();
+void Identificacao(int,char[],char[]);
 
 int main()
 {
     int jogadores=1,dificuldade=1,repeticao=2;
-    Menu(jogadores,dificuldade,repeticao);
+    char jogador1[20]="jogador 1",jogador2[20]="computador";
+    Menu(jogadores,jogador1,jogador2,dificuldade,repeticao);
 }
-void Menu(int jogadores, int dificuldade, int repeticao)
+void Menu(int jogadores,char jogador1[20], char jogador2[20], int dificuldade, int repeticao)
 {
-    system("cls");//para n√£o colocar um system cls em cada fun√ß√£o achei melhor deixar 2 no menu
+    system("cls");//para n„o colocar um system cls em cada funÁ„o achei melhor deixar 2 no menu
     int escolha;
     cout<<"\n                     ___  ___             _                           _             _ \n";
     cout<<"                     |  \\/  |            | |                         (_)           | |\n";
@@ -25,7 +26,7 @@ void Menu(int jogadores, int dificuldade, int repeticao)
     cout<<"                     | |\\/| | / _` |/ __|| __| / _ \\| '__|| '_ ` _ \\ | || '_ \\  / _` |\n";
     cout<<"                     | |  | || (_| |\\__ \\| |_ |  __/| |   | | | | | || || | | || (_| |\n";
     cout<<"                     \\_|  |_/ \\__,_||___/ \\__| \\___||_|   |_| |_| |_||_||_| |_| \\__,_|\n";
-    cout<<"\nComponentes: Victor Angelo, Marcos Paulo, Erickson.\n";
+    cout<<"\nDesenvolvedores: Victor Angelo, Marcos Paulo, Erickson.\n";
     cout<<"\n1-Jogar\n";
     cout<<"2-Instrucoes\n";
     cout<<"3-Configuracoes\n";
@@ -46,10 +47,10 @@ void Menu(int jogadores, int dificuldade, int repeticao)
         Configuracoes(jogadores,dificuldade,repeticao);
         break;
     case 4:
-        Identificacao();
+        Identificacao(jogadores,jogador1,jogador2);
         break;
     }
-    Menu(jogadores,dificuldade,repeticao);
+    Menu(jogadores,jogador1,jogador2,dificuldade,repeticao);
 }
 void Jogo()
 {
@@ -58,7 +59,7 @@ void Jogo()
 }
 void Instrucoes()
 {
-    ifstream instrucao("instru√ß√£o.txt");
+    ifstream instrucao("instruÁ„o.txt");
     char ch;
     while(instrucao.get(ch))
         cout.put(ch);
@@ -81,6 +82,16 @@ void Configuracoes(int& jogadores, int& dificuldade, int& repeticao)
     while(repeticao>3 || repeticao<1)
         cin>>repeticao;
 }
-void Identificacao()
+void Identificacao(int jogadores,char jogador1[20], char jogador2[20])
 {
+    cout<<"Digite o nome do jogador 1: ";
+    cin.ignore();
+    cin.getline(jogador1,20);
+    if(jogadores==1)
+        jogador2="computador";
+    else
+    {
+        cout<<"Digite o nome do jogador2: ";
+        cin.getline(jogador2,20);
+    }
 }
