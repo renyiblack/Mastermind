@@ -7,12 +7,12 @@
 using namespace std;
 
 void Menu(int,char[],char[],int,int);
-int Jogo(char[]);
+int Jogo(char[],int);
 void Instrucoes();
 void Configuracoes(int&,int&,int&);
 void Identificacao(int,char[],char[]);
 void random(char[]);
-void tabuleir(char[][8]);
+void tabuleir(char[][12],int,int);
 int main()
 {
     int jogadores=1,dificuldade=1,repeticao=2;
@@ -21,10 +21,10 @@ int main()
 }
 void Menu(int jogadores,char jogador1[20], char jogador2[20], int dificuldade, int repeticao)
 {
-    int partidas;
+    int partidas,pontosjog1=0,pontosjog2=0,pinos;
     system("cls");//para não colocar um system cls em cada função achei melhor deixar 2 no menu
     int escolha;
-    char senha[5];
+    char senha[6];
     cout<<"\n                     ___  ___             _                           _             _ \n";
     cout<<"                     |  \\/  |            | |                         (_)           | |\n";
     cout<<"                     |      |  __ _  ___ | |_   ___  _ __  _ __ ___   _  _ __    __| |\n";
@@ -44,6 +44,12 @@ void Menu(int jogadores,char jogador1[20], char jogador2[20], int dificuldade, i
     switch(escolha)
     {
     case 1:
+        if(dificuldade==1)
+            pinos=4;
+        else if(dificuldade==2)
+            pinos=5;
+        else
+            pinos=6;
         while(escolha==1)
         {
             if(jogadores==1)
@@ -70,31 +76,41 @@ void Menu(int jogadores,char jogador1[20], char jogador2[20], int dificuldade, i
                         cout<<jogador2<<" sua vez.\n";
                     jogador2="jogador 2";
                     random(senha);
-                    Jogo(senha);
+                    Jogo(senha,dificuldade);
                 }
                 else
                 {
                     if(jogada%2==0)
                     {
                         cout<<jogador1<<"\nDigite a senha: ";
-                        cin.ignore();
-                        cin.getline(senha,5);
+                        for(int i=0;i<pinos;i++){
+                            cin>>senha[i];
+                            while(senha[i]<48 || senha[i]>54)
+                                cin>>senha[i];
+                        }
                         system("cls");
                         cout<<jogador2<<" sua vez.\n";
-                        pontosjog1+=Jogo(senha);
+                        pontosjog1+=Jogo(senha,dificuldade);
                     }
                     else
                     {
                         cout<<jogador2<<"\nDigite a senha: ";
-                        cin.ignore();
-                        cin.getline(senha,5);
+                        for(int i=0;i<pinos;i++){
+                            cin>>senha[i];
+                            while(senha[i]<48 || senha[i]>54)
+                                cin>>senha[i];
+                        }
                         system("cls");
                         cout<<jogador1<<" sua vez.\n";
-                        pontosjog2+=Jogo(senha);
+                        pontosjog2+=Jogo(senha,dificuldade);
                     }
                     cout<<jogador1<<": "<<pontosjog1<<"\t"<<jogador2<<": "<<pontosjog2<<endl;
                 }
             }
+            if(pontosjog1>pontosjog2)
+                cout<<"Parabens "<<jogador1<<"Voce ganhou!";
+            else
+                cout<<"Parabens "<<jogador2<<"Voce ganhou!";
             cout<<"Deseja jogar novamente?(1-sim, 2-nao)\n";
             cin>>escolha;
             while(escolha<1 || escolha>2)
@@ -116,24 +132,38 @@ void Menu(int jogadores,char jogador1[20], char jogador2[20], int dificuldade, i
     }
     Menu(jogadores,jogador1,jogador2,dificuldade,repeticao);
 }
-int Jogo(char senha[4])
+int Jogo(char senha[6],int dificuldade)
 {
-
-    int l=0,cont=0;
-    char tabuleiro[10][8], cores[7]= {"123456"};
-    for(int i=0; i<10; i++)
-        for(int j=0; j<8; j++)
+    int l=0,cont=0,pinos,cores,limjogadas;
+    char tabuleiro[14][12], corespossiveis[11]= {"0123456789"};
+    if(dificuldade==1){
+        pinos=4;
+        cores=6;
+        limjogadas=10;
+    }
+    else if(dificuldade==2){
+        pinos=5;
+        cores=7;
+        limjogadas=12;
+    }
+    else{
+        pinos=6;
+        cores=8;
+        limjogadas=14;
+    }
+    for(int i=0; i<limjogadas; i++)
+        for(int j=0; j<pinos*2; j++)
             tabuleiro[i][j]='*';
-    tabuleir(tabuleiro);
+    tabuleir(tabuleiro,limjogadas,pinos);
     cout<<"As opcoes de cores sao: ";
-    for(int i=0; i<6; i++)
-        cout<<cores[i]<<" ";
+    for(int i=0; i<cores; i++)
+        cout<<corespossiveis[i]<<" ";
     cout<<endl;
-    cout<<"Digite a senha: ";
-    while(l<10 and cont!=4)
+    while(l<limjogadas and cont!=4)
     {
+        cout<<"Digite a senha: ";
         cont=0;
-        for(int i=0; i<4; i++)
+        for(int i=0; i<pinos; i++)
         {
             cin>>tabuleiro[l][i];
             while(tabuleiro[l][i]<48 || tabuleiro[l][i]>54)
@@ -143,21 +173,22 @@ int Jogo(char senha[4])
                 cin>>tabuleiro[l][i];
             }
         }
-        for(int i=0; i<4; i++)
+        for(int i=0; i<pinos; i++)
             if(tabuleiro[l][i]==senha[i])
             {
-                tabuleiro[l][i+4]='P';
+                tabuleiro[l][i+pinos]='P';
                 cont++;
             }
         if(cont!=4)
-            for(int a=0; a<4; a++)
-                for(int j=0; j<4; j++)
-                    if(senha[a]==tabuleiro[l][j] and tabuleiro[l][a+4]=='*')
+            for(int a=0; a<pinos; a++)
+                for(int j=0; j<pinos; j++){
+                    if(senha[a]==tabuleiro[l][j] and tabuleiro[l][j+pinos]=='*')
                     {
-                        tabuleiro[l][a+4]='B';
+                        tabuleiro[l][a+pinos]='B';
                         break;
                     }
-        tabuleir(tabuleiro);
+                }
+        tabuleir(tabuleiro,limjogadas,pinos);
         l++;
     }
     if(cont==4)
@@ -200,28 +231,28 @@ void Identificacao(int jogadores,char jogador1[20], char jogador2[20])
         cin.getline(jogador2,20);
     }
 }
-void random(char senha[4])
+void random(char senha[6])
 {
     srand(time(0));
-    for (int i = 0; i < 4; i++)
+    for (int i=0;i<6; i++)
     {
         do
         {
-            senha[i]=rand()%60;
+            senha[i]=rand()%54;
         }
         while(senha[i]<48 || senha[i]>54);
         cout<<senha[i]<<endl;
     }
 }
-void tabuleir(char tabuleiro[10][8])
+void tabuleir(char tabuleiro[][12],int limjogadas,int pinos)
 {
-    for(int i=0; i<10; i++)
+    for(int i=0; i<limjogadas; i++)
     {
         cout<<"             ";
-        for(int j=0; j<8; j++)
+        for(int j=0; j<pinos*2; j++)
         {
             cout<<"  "<<tabuleiro[i][j];
-            if(j==3)
+            if(j==pinos-1)
                 cout<<"\t";
         }
         cout<<endl;
