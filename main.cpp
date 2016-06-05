@@ -7,24 +7,25 @@
 
 using namespace std;
 
-void Menu(int,char[],char[],int,int);
-int Jogo(char[],int);
+void Menu(int,char[],char[],int,int,int);
+int Jogo(char[],int,int);
 void Instrucoes();
-void Configuracoes(int&,int&,int&);
+void Configuracoes(int&,int&,int&,int&);
 void Identificacao(int,char[],char[]);
 void Random(char[],int,int,int);
 void Tabuleir(char[][12],int,int);
 void Recorde(int,char[]);
+void Verificarepeticao(char[],int,int);
 int main()
 {
-    int jogadores=1,dificuldade=1,repeticao=2;
+    int jogadores=1,dificuldade=1,repeticao=2,tempo=2;
     char jogador1[20]="Jogador 1",jogador2[20]="Jogador 2";
-    Menu(jogadores,jogador1,jogador2,dificuldade,repeticao);
+    Menu(jogadores,jogador1,jogador2,dificuldade,repeticao,tempo);
 }
-void Menu(int jogadores,char jogador1[20], char jogador2[20], int dificuldade, int repeticao)
+void Menu(int jogadores,char jogador1[20], char jogador2[20], int dificuldade, int repeticao,int tempo)
 {
     int partidas,pontosjog1=0,pontosjog2=0,pinos,maior;
-    system("cls");//para não colocar um system cls em cada função achei melhor deixar 2 no menu
+    system("cls");
     int escolha;
     char senha[6];
     cout<<"\n                     ___  ___             _                           _             _ \n";
@@ -49,17 +50,17 @@ void Menu(int jogadores,char jogador1[20], char jogador2[20], int dificuldade, i
         if(dificuldade==1)
         {
             pinos=4;
-            maior=55;
+            maior=54;
         }
         else if(dificuldade==2)
         {
             pinos=5;
-            maior=56;
+            maior=55;
         }
         else
         {
             pinos=6;
-            maior=57;
+            maior=56;
         }
         while(escolha==1)
         {
@@ -75,14 +76,14 @@ void Menu(int jogadores,char jogador1[20], char jogador2[20], int dificuldade, i
                     cin>>partidas;
                 }
             }
-            system("cls");
             for(int jogada=0,pontosjog1=0,pontosjog2=0; jogada<partidas; jogada++)
             {
+                system("cls");
                 if(jogadores==1)
                 {
                     jogador2="jogador 2";
                     Random(senha,repeticao,maior,pinos);
-                    pontosjog1+=Jogo(senha,dificuldade);
+                    pontosjog1+=Jogo(senha,dificuldade,tempo);
                     if(pontosjog1>0)
                     {
                         cout<<"Parabens "<<jogador1<<" Voce ganhou!\n";
@@ -90,7 +91,9 @@ void Menu(int jogadores,char jogador1[20], char jogador2[20], int dificuldade, i
                         char ch;
                         int pontos;
                         while(fin.get(ch))
+                        {
                             pontos=ch-'0';
+                        }
                         fin.close();
                         if(pontosjog1>pontos)
                             Recorde(pontosjog1,jogador1);
@@ -101,38 +104,56 @@ void Menu(int jogadores,char jogador1[20], char jogador2[20], int dificuldade, i
                     cout<<"Partida "<<jogada+1<<endl;
                     if(jogada%2==0)
                     {
+                        char ch;
                         cout<<jogador1<<"\nDigite a senha: ";
                         for(int i=0; i<pinos; i++)
                         {
-                            cin>>senha[i];
-                            while(senha[i]<49 || senha[i]>maior)
-                                cin>>senha[i];
+                            cin>>ch;
+                            while(ch<49 || ch>maior)
+                            {
+                                cout<<i<<" Numero repetido. Digite novamente: ";
+                                cin>>ch;
+                            }
+                            senha[i]=ch;
                         }
-                        cin.ignore();
-                        system("cls");
+                        if(repeticao==2)
+                            Verificarepeticao(senha,pinos,maior);
+                        fflush(stdin);
                         cout<<jogador2<<" sua vez.\n";
-                        pontosjog1+=Jogo(senha,dificuldade);
+                        pontosjog1+=Jogo(senha,dificuldade,tempo);
                     }
                     else
                     {
-                        cout<<jogador2<<"\nDigite a senha: ";
+                        char ch;
+                        cout<<jogador1<<"\nDigite a senha: ";
                         for(int i=0; i<pinos; i++)
                         {
-                            cin>>senha[i];
-                            while(senha[i]<49 || senha[i]>maior)
-                                cin>>senha[i];
+                            cin>>ch;
+                            while(ch<49 || ch>maior)
+                            {
+                                cout<<i<<" Numero repetido. Digite novamente: ";
+                                cin>>ch;
+                            }
+                            senha[i]=ch;
                         }
-                        cin.ignore();
-                        system("cls");
+                        if(repeticao==2)
+                            Verificarepeticao(senha,pinos,maior);
+                        fflush(stdin);
                         cout<<jogador1<<" sua vez.\n";
-                        pontosjog2+=Jogo(senha,dificuldade);
+                        pontosjog2+=Jogo(senha,dificuldade,tempo);
                     }
                     cout<<jogador1<<": "<<pontosjog1<<"\t"<<jogador2<<": "<<pontosjog2<<endl;
 
                     if(pontosjog1>pontosjog2)
+                    {
                         cout<<"Parabens "<<jogador1<<" Voce ganhou!\n";
+                        system("pause");
+                    }
                     else
+                    {
                         cout<<"Parabens "<<jogador2<<" Voce ganhou!\n";
+                        system("pause");
+                    }
                 }
             }
             cout<<"Deseja jogar novamente?(1-sim, 2-nao)\n";
@@ -142,41 +163,48 @@ void Menu(int jogadores,char jogador1[20], char jogador2[20], int dificuldade, i
                 cout<<"Numero invalido.\n";
                 cin>>escolha;
             }
+            system("cls");
         }
         break;
     case 2:
         Instrucoes();
         break;
     case 3:
-        Configuracoes(jogadores,dificuldade,repeticao);
+        Configuracoes(jogadores,dificuldade,repeticao,tempo);
         break;
     case 4:
         Identificacao(jogadores,jogador1,jogador2);
         break;
     }
-    Menu(jogadores,jogador1,jogador2,dificuldade,repeticao);
+    Menu(jogadores,jogador1,jogador2,dificuldade,repeticao,tempo);
 }
-int Jogo(char senha[6],int dificuldade)
+int Jogo(char senha[6],int dificuldade,int tempo)
 {
-    int l=0,cont=0,pinos,cores,limjogadas;
+    int l=0,cont=0,pinos,cores,limjogadas,fin,decorrido;
+    double inicio=0;
     char tabuleiro[14][12],c, corespossiveis[9]= {"12345678"};
+    if(tempo==1)
+        decorrido=time(0);
     if(dificuldade==1)
     {
         pinos=4;
         cores=6;
         limjogadas=10;
+        fin=900;
     }
     else if(dificuldade==2)
     {
         pinos=5;
         cores=7;
         limjogadas=12;
+        fin=600;
     }
     else
     {
         pinos=6;
         cores=8;
         limjogadas=14;
+        fin=300;
     }
     for(int i=0; i<limjogadas; i++)
         for(int j=0; j<pinos*2; j++)
@@ -186,8 +214,18 @@ int Jogo(char senha[6],int dificuldade)
     for(int i=0; i<cores; i++)
         cout<<corespossiveis[i]<<" ";
     cout<<endl;
-    while(l<limjogadas and cont!=pinos)
+    for (int i=0; i<pinos; i++)
+        cout<<senha[i]<<endl;
+    while((l<limjogadas and cont!=pinos) and inicio<=fin)
     {
+        if(tempo==1)
+        {
+            inicio=time(0)-decorrido;
+            if(inicio>=60)
+                cout<<"Tempo: "<<inicio/60<<" minutos."<<endl;
+            else
+                cout<<"Tempo: "<<inicio<<" segundos."<<endl;
+        }
         cout<<"Digite a senha: ";
         cont=0;
         for(int i=0; i<pinos; i++)
@@ -239,7 +277,7 @@ void Instrucoes()
     cout<<endl;
     system("pause");
 }
-void Configuracoes(int& jogadores, int& dificuldade, int& repeticao)
+void Configuracoes(int& jogadores, int& dificuldade, int& repeticao, int& tempo)
 {
     cout<<"Digite a quantidade de jogadores: ";
     cin>>jogadores;
@@ -251,8 +289,12 @@ void Configuracoes(int& jogadores, int& dificuldade, int& repeticao)
         cin>>dificuldade;
     cout<<"Podera repetir cores na senha?(1-sim, 2-nao): ";
     cin>>repeticao;
-    while(repeticao>3 || repeticao<1)
+    while(repeticao>2 || repeticao<1)
         cin>>repeticao;
+    cout<<"Ativara limite de tempo?(1-sim, 2-nao): ";
+    cin>>tempo;
+    while(tempo>2 || tempo<1)
+        cin>>tempo;
 }
 void Identificacao(int jogadores,char jogador1[20], char jogador2[20])
 {
@@ -298,8 +340,6 @@ void Random(char senha[6],int repeticao, int maior, int pinos)
                 }
             }
         }
-    for (int i=0; i<pinos; i++)
-        cout<<senha[i]<<endl;
 }
 void Tabuleir(char tabuleiro[][12],int limjogadas,int pinos)
 {
@@ -349,7 +389,7 @@ void Tabuleir(char tabuleiro[][12],int limjogadas,int pinos)
         cout<<endl;
     }
     if(pinos==4)
-    cout<<"             ------------------------ ------------------------\n";
+        cout<<"             ------------------------ ------------------------\n";
     else if(pinos==5)
         cout<<"             ------------------------------ ------------------------------\n";
     else
@@ -360,6 +400,43 @@ void Recorde(int pontosjog1,char jogador[20])
     ofstream fout("recorde.txt");
     for(int i=0; jogador[i]!='\0'; i++)
         fout<<jogador[i];
-    fout<<": "<<pontosjog1;
+    fout<<":"<<pontosjog1;
     fout.close();
+}
+void Verificarepeticao(char senha[6],int pinos,int maior)
+{
+    char ch;
+    int repetido=0;
+    do
+    {
+        for(int i=0; i<pinos; i++)
+        {
+            for(int j=0; j<pinos; j++)
+            {
+                if(i!=j and senha[i]==senha[j])
+                {
+                    repetido=1;
+                    break;
+                }
+                else
+                    repetido=0;
+            }
+            if(repetido==1)
+                break;
+        }
+        if(repetido==1)
+        {
+            cout<<"Numeros repetidos. Digite outra senha: ";
+            for(int i=0; i<pinos; i++)
+            {
+                do
+                {
+                    cin>>ch;
+                }
+                while(ch<49 || ch>maior);
+                senha[i]=ch;
+            }
+        }
+    }
+    while(repetido==1);
 }
