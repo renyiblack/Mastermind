@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <windows.h>
 #include <fstream>
 #include <cstdlib>
@@ -85,14 +86,14 @@ void Menu(int jogadores,char jogador1[20], char jogador2[20], int dificuldade, i
                     if(pontosjog1>0)
                     {
                         cout<<"Parabens "<<jogador1<<" Voce ganhou!\n";
-                        /*ifstream fin("recorde.txt");
+                        ifstream fin("recorde.txt");
+                        char ch;
                         int pontos;
-                        while(!fin.eof())
-                            pontos=fin.get();
+                        while(fin.get(ch))
+                            pontos=ch-'0';
                         fin.close();
-                        cout<<pontos;
                         if(pontosjog1>pontos)
-                            Recorde(pontosjog1,jogador1);*/
+                            Recorde(pontosjog1,jogador1);
                     }
                 }
                 else
@@ -255,12 +256,13 @@ void Configuracoes(int& jogadores, int& dificuldade, int& repeticao)
 }
 void Identificacao(int jogadores,char jogador1[20], char jogador2[20])
 {
-    cout<<"Maior recorde: ";
+    cout<<"Recorde: ";
     char ch;
     ifstream fin("recorde.txt");
     while(fin.get(ch))
         cout.put(ch);
     fin.close();
+    cout<<" pontos.";
     cout<<"\nDigite o nome do jogador 1: ";
     cin.getline(jogador1,20);
     if(jogadores==2)
@@ -301,42 +303,57 @@ void Random(char senha[6],int repeticao, int maior, int pinos)
 }
 void Tabuleir(char tabuleiro[][12],int limjogadas,int pinos)
 {
-    if(pinos==4){
-        cout<<"             _________________________________";
-        cout<<"\n            |Senha:";}
-    else if(pinos==5){
-        cout<<"             _________________________________________";
-        cout<<"\n            |Senha:";}
-    else{
-        cout<<"             __________________________________________________";
-        cout<<"\n            |Senha:";}
+    if(pinos==4)
+    {
+        cout<<"             _________________________________________________";
+        cout<<"\n            |                                                 |\n            |Senha:";
+    }
+    else if(pinos==5)
+    {
+        cout<<"             _____________________________________________________________";
+        cout<<"\n            |                                                             |\n            |Senha:";
+    }
+    else
+    {
+        cout<<"             _________________________________________________________________________";
+        cout<<"\n            |                                                                         |\n            |Senha:";
+    }
     for(int i=0; i<pinos; i++)
     {
         cout<<"(x)";
     }
     if(pinos==4)
-    cout<<"               |\n";
+    {
+        cout<<"                               |\n";
+        cout<<"            |_________________________________________________|\n";
+    }
     else if(pinos==5)
-    cout<<"                    |\n";
+    {
+        cout<<"                                        |\n";
+        cout<<"            |_____________________________________________________________|\n";
+    }
     else
-    cout<<"                         |\n";
+    {
+        cout<<"                                                 |\n";
+        cout<<"            |_________________________________________________________________________|\n";
+    }
     for(int i=0; i<limjogadas; i++)
     {
         cout<<"            |";
         for(int j=0; j<pinos*2; j++)
         {
-            cout<<"("<<tabuleiro[i][j]<<")|";
+            cout<<"(_"<<tabuleiro[i][j]<<"_)|";
             if(j==pinos-1)
                 cout<<" |";
         }
-        if(pinos==4)
-            cout<<"\n            |________________ ________________|\n";
-        else if(pinos==5)
-            cout<<"\n            |___________________ _____________________|\n";
-        else
-            cout<<"\n            |________________________ ________________________|\n";
         cout<<endl;
     }
+    if(pinos==4)
+    cout<<"             ------------------------ ------------------------\n";
+    else if(pinos==5)
+        cout<<"             ------------------------------ ------------------------------\n";
+    else
+        cout<<"             ------------------------------------ ------------------------------------\n";
 }
 void Recorde(int pontosjog1,char jogador[20])
 {
@@ -345,5 +362,4 @@ void Recorde(int pontosjog1,char jogador[20])
         fout<<jogador[i];
     fout<<": "<<pontosjog1;
     fout.close();
-    cout<<" pontos.";
 }
