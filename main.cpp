@@ -39,8 +39,9 @@ void Menu(int jogadores,char jogador1[20], char jogador2[20], int dificuldade, i
     cout<<"2-Instrucoes\n";
     cout<<"3-Configuracoes\n";
     cout<<"4-Identificacao\n";
+    cout<<"5-Sair\n";
     cin>>escolha;
-    while(escolha<1 || escolha>4)
+    while(escolha<1 || escolha>5)
         cin>>escolha;
     system("cls");
     cin.ignore();
@@ -76,14 +77,14 @@ void Menu(int jogadores,char jogador1[20], char jogador2[20], int dificuldade, i
                     cin>>partidas;
                 }
             }
-            for(int jogada=0,pontosjog1=0,pontosjog2=0; jogada<partidas; jogada++)
+            for(int jogada=0; jogada<partidas; jogada++)
             {
                 system("cls");
                 if(jogadores==1)
                 {
                     jogador2="jogador 2";
                     Random(senha,repeticao,maior,pinos);
-                    pontosjog1+=Jogo(senha,dificuldade,tempo);
+                    pontosjog1=pontosjog1+Jogo(senha,dificuldade,tempo);
                     if(pontosjog1>0)
                     {
                         cout<<"Parabens "<<jogador1<<" Voce ganhou!\n";
@@ -101,7 +102,6 @@ void Menu(int jogadores,char jogador1[20], char jogador2[20], int dificuldade, i
                 }
                 else
                 {
-                    cout<<"Partida "<<jogada+1<<endl;
                     if(jogada%2==0)
                     {
                         char ch;
@@ -119,13 +119,16 @@ void Menu(int jogadores,char jogador1[20], char jogador2[20], int dificuldade, i
                         if(repeticao==2)
                             Verificarepeticao(senha,pinos,maior);
                         fflush(stdin);
+                        system("cls");
+                        cout<<"Partida "<<jogada+1<<endl;
+                        cout<<"Restam "<<partidas-1-jogada<<endl;
                         cout<<jogador2<<" sua vez.\n";
-                        pontosjog1+=Jogo(senha,dificuldade,tempo);
+                        pontosjog1=pontosjog1+Jogo(senha,dificuldade,tempo);
                     }
                     else
                     {
                         char ch;
-                        cout<<jogador1<<"\nDigite a senha: ";
+                        cout<<jogador2<<"\nDigite a senha: ";
                         for(int i=0; i<pinos; i++)
                         {
                             cin>>ch;
@@ -139,20 +142,22 @@ void Menu(int jogadores,char jogador1[20], char jogador2[20], int dificuldade, i
                         if(repeticao==2)
                             Verificarepeticao(senha,pinos,maior);
                         fflush(stdin);
+                        system("cls");
+                        cout<<"Partida "<<jogada+1<<endl;
+                        cout<<"Restam "<<partidas-1-jogada<<endl;
                         cout<<jogador1<<" sua vez.\n";
-                        pontosjog2+=Jogo(senha,dificuldade,tempo);
+                        pontosjog2=pontosjog2+Jogo(senha,dificuldade,tempo);
                     }
                     cout<<jogador1<<": "<<pontosjog1<<"\t"<<jogador2<<": "<<pontosjog2<<endl;
-
-                    if(pontosjog1>pontosjog2)
+                    system("pause");
+                    if(jogadores==2)
                     {
-                        cout<<"Parabens "<<jogador1<<" Voce ganhou!\n";
-                        system("pause");
-                    }
-                    else
-                    {
-                        cout<<"Parabens "<<jogador2<<" Voce ganhou!\n";
-                        system("pause");
+                        if(pontosjog1>pontosjog2)
+                            cout<<"Parabens "<<jogador1<<" Voce ganhou!\n";
+                        else if(pontosjog2>pontosjog1)
+                            cout<<"Parabens "<<jogador2<<" Voce ganhou!\n";
+                        else
+                            cout<<"Empate!\n";
                     }
                 }
             }
@@ -175,6 +180,8 @@ void Menu(int jogadores,char jogador1[20], char jogador2[20], int dificuldade, i
     case 4:
         Identificacao(jogadores,jogador1,jogador2);
         break;
+    case 5:
+        return;
     }
     Menu(jogadores,jogador1,jogador2,dificuldade,repeticao,tempo);
 }
@@ -211,21 +218,27 @@ int Jogo(char senha[6],int dificuldade,int tempo)
             tabuleiro[i][j]='*';
     Tabuleir(tabuleiro,limjogadas,pinos);
     cout<<"As opcoes de cores sao: ";
-    for(int i=0; i<cores; i++)
-        cout<<corespossiveis[i]<<" ";
+    cout<<corespossiveis[0]<<"-Azul, ";
+    cout<<corespossiveis[1]<<"-Vermelho, ";
+    cout<<corespossiveis[2]<<"-Amarelo, ";
+    cout<<corespossiveis[3]<<"-Verde, ";
+    cout<<corespossiveis[4]<<"-Roxo, ";
+    cout<<corespossiveis[5];
+    if(cores==6)
+        cout<<"-Marrom.";
+    else if(cores==7)
+    {
+        cout<<"-Marrom, ";
+        cout<<corespossiveis[6]<<"-Cinza.";
+    }
+    else if(cores==8)
+    {
+        cout<<corespossiveis[6]<<"-Cinza, ";
+        cout<<corespossiveis[7]<<"-Laranja.";
+    }
     cout<<endl;
-    for (int i=0; i<pinos; i++)
-        cout<<senha[i]<<endl;
     while((l<limjogadas and cont!=pinos) and inicio<=fin)
     {
-        if(tempo==1)
-        {
-            inicio=time(0)-decorrido;
-            if(inicio>=60)
-                cout<<"Tempo: "<<inicio/60<<" minutos."<<endl;
-            else
-                cout<<"Tempo: "<<inicio<<" segundos."<<endl;
-        }
         cout<<"Digite a senha: ";
         cont=0;
         for(int i=0; i<pinos; i++)
@@ -261,9 +274,17 @@ int Jogo(char senha[6],int dificuldade,int tempo)
                 }
         Tabuleir(tabuleiro,limjogadas,pinos);
         l++;
+        if(tempo==1)
+        {
+            inicio=time(0)-decorrido;
+            if(inicio>=60)
+                cout<<"Tempo: "<<inicio/60<<" minutos."<<endl;
+            else
+                cout<<"Tempo: "<<inicio<<" segundos."<<endl;
+        }
     }
     if(cont==pinos)
-        return 10-l;
+        return l;
     else
         return 0;
 }
@@ -291,7 +312,7 @@ void Configuracoes(int& jogadores, int& dificuldade, int& repeticao, int& tempo)
     cin>>repeticao;
     while(repeticao>2 || repeticao<1)
         cin>>repeticao;
-    cout<<"Ativara limite de tempo?(1-sim, 2-nao): ";
+    cout<<"Ativar limite de tempo?(1-sim, 2-nao): ";
     cin>>tempo;
     while(tempo>2 || tempo<1)
         cin>>tempo;
