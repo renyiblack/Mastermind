@@ -13,7 +13,7 @@ void Instrucoes();
 void Configuracoes(int&,int&,int&,int&);
 void Identificacao(int,char[],char[]);
 void Random(char[],int,int,int);
-void Tabuleir(char[][12],int,int);
+void Tabuleir(char[][12],int,int,int,char[8]);
 void Recorde(int,char[]);
 void Verificarepeticao(char[],int,int);
 int main()
@@ -27,7 +27,7 @@ void Menu(int jogadores,char jogador1[20], char jogador2[20], int dificuldade, i
     int partidas,pontosjog1=0,pontosjog2=0,pinos,maior;
     system("cls");
     int escolha;
-    char senha[6];
+    char senha[8];
     cout<<"\n                     ___  ___             _                           _             _ \n";
     cout<<"                     |  \\/  |            | |                         (_)           | |\n";
     cout<<"                     |      |  __ _  ___ | |_   ___  _ __  _ __ ___   _  _ __    __| |\n";
@@ -185,7 +185,7 @@ void Menu(int jogadores,char jogador1[20], char jogador2[20], int dificuldade, i
     }
     Menu(jogadores,jogador1,jogador2,dificuldade,repeticao,tempo);
 }
-int Jogo(char senha[6],int dificuldade,int tempo)
+int Jogo(char senha[8],int dificuldade,int tempo)
 {
     int l=0,cont=0,pinos,cores,limjogadas,fin,decorrido;
     double inicio=0;
@@ -216,7 +216,7 @@ int Jogo(char senha[6],int dificuldade,int tempo)
     for(int i=0; i<limjogadas; i++)
         for(int j=0; j<pinos*2; j++)
             tabuleiro[i][j]='*';
-    Tabuleir(tabuleiro,limjogadas,pinos);
+    Tabuleir(tabuleiro,limjogadas,pinos,cont,senha);
     cout<<"As opcoes de cores sao: ";
     cout<<corespossiveis[0]<<"-Azul, ";
     cout<<corespossiveis[1]<<"-Vermelho, ";
@@ -272,7 +272,7 @@ int Jogo(char senha[6],int dificuldade,int tempo)
                         break;
                     }
                 }
-        Tabuleir(tabuleiro,limjogadas,pinos);
+        Tabuleir(tabuleiro,limjogadas,pinos,cont,senha);
         l++;
         if(tempo==1)
         {
@@ -334,7 +334,7 @@ void Identificacao(int jogadores,char jogador1[20], char jogador2[20])
         cin.getline(jogador2,20);
     }
 }
-void Random(char senha[6],int repeticao, int maior, int pinos)
+void Random(char senha[8],int repeticao, int maior, int pinos)
 {
     srand(time(0));
     for (int i=0; i<pinos; i++)
@@ -362,7 +362,7 @@ void Random(char senha[6],int repeticao, int maior, int pinos)
             }
         }
 }
-void Tabuleir(char tabuleiro[][12],int limjogadas,int pinos)
+void Tabuleir(char tabuleiro[][12],int limjogadas,int pinos,int cont,char senha[8])
 {
     if(pinos==4)
     {
@@ -381,6 +381,9 @@ void Tabuleir(char tabuleiro[][12],int limjogadas,int pinos)
     }
     for(int i=0; i<pinos; i++)
     {
+        if(cont==4)
+            cout<<"("<<senha[i]<<")";
+        else
         cout<<"(x)";
     }
     if(pinos==4)
@@ -424,7 +427,7 @@ void Recorde(int pontosjog1,char jogador[20])
     fout<<":"<<pontosjog1;
     fout.close();
 }
-void Verificarepeticao(char senha[6],int pinos,int maior)
+void Verificarepeticao(char senha[8],int pinos,int maior)
 {
     char ch;
     int repetido=0;
