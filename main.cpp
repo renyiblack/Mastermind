@@ -84,7 +84,7 @@ void Menu(int jogadores,char jogador1[20], char jogador2[20], int dificuldade, i
                 {
                     jogador2="jogador 2";
                     Random(senha,repeticao,maior,pinos);
-                    pontosjog1=pontosjog1+Jogo(senha,dificuldade,tempo);
+                    pontosjog1=pontosjog1+10-Jogo(senha,dificuldade,tempo);
                     if(pontosjog1>0)
                     {
                         cout<<"Parabens "<<jogador1<<" Voce ganhou!\n";
